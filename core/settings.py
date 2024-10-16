@@ -33,7 +33,7 @@ DEBUG = os.getenv('DEBUG', 'False') == 'True'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['161.97.173.204']
+ALLOWED_HOSTS = ['161.97.173.204', '127.0.0.1']
 
 
 # Application definition

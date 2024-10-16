@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Import CSV and List Data</title>
+    <title>Import CSV with Progress Bar</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -73,12 +73,38 @@
                 font-size: 14px;
             }
         }
+
+        /* Progress bar styling */
+        #progressBar {
+            width: 100%;
+            background-color: #f3f3f3;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            overflow: hidden;
+            display: none; /* Initially hidden */
+        }
+
+        #progress {
+            width: 0%;
+            height: 30px;
+            background-color: #5cb85c;
+            line-height: 30px;
+            color: white;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Import CSV File</h1>
-        <form id="uploadForm" method="POST" enctype="multipart/form-data" action="{% url 'import_csv' %}">
+
+        <!-- Progress Bar -->
+        <div id="progressBar">
+            <div id="progress">0%</div>
+        </div>
+
+        <!-- File Upload Form -->
+        <form id="uploadForm" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             <input type="file" id="csv_file" name="csv_file" accept=".csv" required><br>
             <button type="submit">Upload and Save Data</button>
@@ -108,18 +134,38 @@
             event.preventDefault();
 
             let formData = new FormData(this);
-            fetch("{% url 'import_csv' %}", {
-                method: 'POST',
-                body: formData
-            }).then(response => response.json())
-              .then(data => {
-                  alert(data.message);
-                  window.location.reload();
-              }).catch(error => {
-                  console.error('Error:', error);
-              });
+            let xhr = new XMLHttpRequest();
+
+            // Show the progress bar
+            let progressBar = document.getElementById('progressBar');
+            let progress = document.getElementById('progress');
+            progressBar.style.display = 'block';
+
+            xhr.open('POST', "{% url 'maramari_app:import_csv' %}", true);
+            xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
+
+            // Update progress bar
+            xhr.upload.addEventListener('progress', function(e) {
+                if (e.lengthComputable) {
+                    let percentComplete = (e.loaded / e.total) * 100;
+                    progress.style.width = percentComplete + '%';
+                    progress.innerHTML = Math.round(percentComplete) + '%';
+                }
+            });
+
+            // When upload is complete
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    alert('File uploaded successfully!');
+                    window.location.reload();  // Reload page to show updated data
+                } else {
+                    alert('File upload failed!');
+                }
+            };
+
+            // Send the request
+            xhr.send(formData);
         });
     </script>
 </body>
 </html>
-
