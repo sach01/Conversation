@@ -1,0 +1,29 @@
+<!-- maramari_app/templates/analytics.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Analytics Dashboard</title>
+</head>
+<body>
+    <h1>Analytics Dashboard</h1>
+
+    <h2>Average Time Taken per Translation</h2>
+    <p>{{ avg_time }}</p>
+
+    <h2>Top 10 Most Active Users</h2>
+    <ul>
+        {% for profile in translations_per_user %}
+            <li>{{ profile.user.username }} - {{ profile.translation_count }} translations</li>
+        {% endfor %}
+    </ul>
+
+    <h2>Top 10 Most Difficult Sentences</h2>
+    <ul>
+        {% for translation in difficult_sentences %}
+            <li>{{ translation.sentence_pair.english_sentence }} - Duration: {{ translation.duration }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

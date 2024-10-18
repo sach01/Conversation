@@ -19,8 +19,11 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    #path('api/v1/', include(('maramari_app.urls', 'maramari_app'), namespace='v1')),
-    path('api/v1/', include(('maramari_app.urls', 'maramari_app'), namespace='maramari_app')),
-    path('api/v2/', include(('maramari_app.urls', 'maramari_app'), namespace='v2')),
+    path('api/v1/', include('maramari_app.urls')),
+    #path('maramari/', include('maramari_app.urls')),
+    #path('api/v1/', include(('maramari_app.urls', 'maramari_app'), namespace='maramari_app')),
+
+    path('accounts/', include('accounts.urls')),
+    #path('api/v2/', include(('maramari_app.urls', 'maramari_app'), namespace='v2')),
 
 ]

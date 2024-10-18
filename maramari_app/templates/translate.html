@@ -1,0 +1,52 @@
+<!-- maramari_app/templates/translate.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Translate Sentence</title>
+    <style>
+        /* Simple styles for progress bar */
+        .progress-container {
+            border: 1px solid #ccc;
+            width: 100%;
+            background-color: #e0e0e0;
+            margin-top: 20px;
+        }
+        .progress-bar {
+            width: 0%;
+            background-color: green;
+            height: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Translate Sentence</h1>
+
+    {% if sentence_pair %}
+        <form method="post" action="{% url 'submit_translation' sentence_pair.id %}">
+            {% csrf_token %}
+            <div>
+                <h2>Translate the following sentence:</h2>
+                <p><strong>English:</strong> {{ sentence_pair.english_sentence }}</p>
+            </div>
+            <div>
+                <textarea name="translation" rows="4" cols="50" placeholder="Enter your translation here" required></textarea>
+            </div>
+            <button type="submit">Submit Translation</button>
+        </form>
+
+        <h3>Your Translation Progress</h3>
+        <p>{{ progress_percentage|floatformat:2 }}% completed</p>
+        <p>{{ remaining_tasks }} translations remaining</p>
+
+        <div class="progress-container">
+            <div class="progress-bar" style="width: {{ progress_percentage }}%;"></div>
+        </div>
+    {% elif message %}
+        <p>{{ message }}</p>
+    {% else %}
+        <p>Loading your next translation...</p>
+    {% endif %}
+</body>
+</html>

@@ -50,6 +50,24 @@
     </style>
 </head>
 <body>
+    <form method="post" action="{% url 'submit_translation' sentence_pair.id %}">
+        {% csrf_token %}
+        <h2>Translate the following sentence</h2>
+        <p>{{ sentence_pair.english_sentence }}</p>
+        <textarea name="translation" rows="4" cols="50" placeholder="Enter your translation here"></textarea>
+        <button type="submit">Submit Translation</button>
+    </form>
+    
+    <h3>Your current batch of translations</h3>
+    <ul>
+        <li>{{ progress_percentage }}% completed</li>
+        <li>{{ remaining_tasks }} tasks remaining</li>
+    </ul>
+    
+    <div style="border: 1px solid #ccc; width: 100%; background-color: #e0e0e0;">
+        <div style="width: {{ progress_percentage }}%; background-color: green; height: 20px;"></div>
+    </div>
+    
     <div class="container">
         <h2>List of Sentence Pairs</h2>
         <table>
